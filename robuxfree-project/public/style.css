@@ -1,0 +1,437 @@
+:root {
+    --bg-color: #0a0a0a;
+    --card-bg: #141414;
+    --gold: #ffd700;
+    --gold-dim: #b89b00;
+    --text-main: #fff;
+    --text-muted: #aaa;
+    --border: #333;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-color);
+    color: var(--text-main);
+}
+
+.container {
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    background: var(--card-bg);
+    border: 1px solid var(--gold-dim);
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgb(255 215 0 / 10%);
+}
+
+header h1 {
+    margin-bottom: 20px;
+    text-align: center;
+    letter-spacing: 2px;
+}
+
+.gold-text {
+    color: var(--gold);
+    text-shadow: 0 0 10px var(--gold-dim);
+}
+
+.progress-container {
+    width: 100%;
+    height: 6px;
+    margin-bottom: 30px;
+    overflow: hidden;
+    background: #333;
+    border-radius: 3px;
+}
+
+.progress-bar {
+    width: 20%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+    transition: width 0.5s ease;
+}
+
+.step {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.step.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: var(--gold);
+    font-size: 1.4rem;
+    text-align: center;
+}
+
+p {
+    line-height: 1.5;
+}
+
+.input-group {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+input[type="text"] {
+    flex: 1 1 0;
+    width: 0;
+    min-width: 0;
+    padding: 12px;
+    color: #fff;
+    background: #222;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    outline: none;
+    pointer-events: auto;
+}
+
+.input-group button {
+    flex: 0 0 auto;
+    width: auto;
+    margin-top: 0;
+}
+
+.profile-status {
+    min-height: 1.5em;
+    margin: -5px 0 12px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+input:focus-visible,
+button:focus-visible,
+a:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+}
+
+button,
+.btn-link,
+.btn-download {
+    display: inline-block;
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    color: #000;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    background: linear-gradient(45deg, var(--gold-dim), var(--gold));
+    border: 0;
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+button:hover:not(:disabled),
+.btn-link:hover,
+.btn-download:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 15px var(--gold-dim);
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.profile-card,
+.summary-card {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: #222;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.profile-card {
+    margin-bottom: 15px;
+}
+
+.info h3,
+.summary-info h3 {
+    margin-bottom: 5px;
+    font-size: 1rem;
+}
+
+.info p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.id-display {
+    margin-top: 5px;
+    color: var(--gold) !important;
+    font-size: 0.8rem !important;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 15px 0 20px;
+}
+
+.card {
+    margin: 0;
+    padding: 20px;
+    color: var(--text-main);
+    background: #1a1a1a;
+    border: 1px solid var(--border);
+}
+
+.card:hover:not(:disabled) {
+    border-color: var(--gold);
+}
+
+.card.selected {
+    background: #2a2a00;
+    border: 2px solid var(--gold);
+    box-shadow: 0 0 10px var(--gold-dim);
+}
+
+.card h3 {
+    color: var(--gold);
+    font-size: 1.5rem;
+}
+
+.mission-box,
+.important-info {
+    padding: 15px;
+    background: #1a1a1a;
+    border-radius: 10px;
+}
+
+.mission-eyebrow {
+    margin-bottom: 5px;
+    color: #ff7a00;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+}
+
+.mission-title {
+    margin-bottom: 18px;
+    color: #f7eee8;
+    font-size: 1.25rem;
+    text-align: left;
+}
+
+.mission-title span {
+    color: #ff7a00;
+}
+
+.mission-box {
+    padding: 16px;
+    margin-bottom: 14px;
+    background: #21140f;
+    border: 1px solid #40251a;
+    border-radius: 18px;
+}
+
+.mission-steps {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 12px;
+    list-style: none;
+    counter-reset: mission-step;
+}
+
+.mission-steps li {
+    display: flex;
+    min-height: 48px;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 11px;
+    color: #f7eee8;
+    background: #281911;
+    border: 1px solid #472b1e;
+    border-radius: 15px;
+    font-size: 0.88rem;
+    line-height: 1.4;
+    counter-increment: mission-step;
+}
+
+.mission-steps li::before {
+    display: grid;
+    width: 27px;
+    height: 27px;
+    flex: 0 0 27px;
+    place-items: center;
+    color: #fff;
+    background: linear-gradient(135deg, #ff3c24, #ff8a00);
+    border-radius: 50%;
+    content: counter(mission-step);
+    font-weight: 800;
+}
+
+.links-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.links-section .btn-download {
+    margin-top: 0;
+    padding: 10px 12px;
+    color: #f7eee8;
+    background: #2b1b13;
+    border: 1px solid #472b1e;
+    border-radius: 12px;
+}
+
+.mission-invite-link {
+    display: block;
+    overflow-wrap: anywhere;
+    padding: 10px 12px;
+    color: #ff8a00;
+    background: #2b1511;
+    border: 1px solid #a62f1d;
+    border-radius: 14px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: underline;
+}
+
+.mission-invite-link:hover {
+    background: #381a13;
+}
+
+.btn-download {
+    color: #fff;
+    background: #333;
+    border: 1px solid var(--border);
+}
+
+.disclosure {
+    margin-bottom: 15px;
+    padding: 10px 12px;
+    color: #d3c4bb;
+    background: #1b120f;
+    border-left: 2px solid #ff7a00;
+    border-radius: 4px 10px 10px 4px;
+    font-size: 0.9rem;
+}
+
+.upload-area {
+    position: relative;
+    margin: 15px 0;
+    padding: 20px;
+    text-align: center;
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+}
+
+.upload-area:hover {
+    border-color: var(--gold);
+}
+
+#fileInput {
+    width: 100%;
+    margin-top: 12px;
+}
+
+.preview-container {
+    margin-top: 10px;
+}
+
+.preview-container img {
+    max-width: 100%;
+    max-height: 150px;
+    border: 1px solid var(--gold);
+    border-radius: 5px;
+}
+
+.summary-card {
+    gap: 15px;
+    margin-bottom: 20px;
+    border-color: var(--gold-dim);
+}
+
+.reward-amt {
+    margin-top: 5px;
+    color: var(--gold);
+    font-weight: bold;
+}
+
+.status-ok {
+    margin-top: 5px;
+    color: #4caf50;
+}
+
+.important-info {
+    margin-bottom: 20px;
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
+.important-info h3 {
+    margin-bottom: 10px;
+    color: var(--gold);
+    font-size: 1rem;
+}
+
+.important-info ul {
+    padding-left: 20px;
+    list-style: disc;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.error {
+    margin-top: 10px;
+    color: #ff4444;
+    text-align: center;
+}
+
+.btn-reset {
+    color: var(--gold);
+    background: transparent;
+    border: 1px solid var(--gold);
+}
+
+@media (max-width: 400px) {
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .input-group {
+        flex-direction: column;
+    }
+
+    .input-group input[type="text"],
+    .input-group button {
+        width: 100%;
+    }
+
+    .input-group button {
+        margin-top: 0;
+    }
+}

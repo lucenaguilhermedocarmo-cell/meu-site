@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROBLOX GOLD</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ROBLOX <span class="gold-text">GOLD</span></h1>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </header>
+
+        <main>
+            <section id="step1" class="step active">
+                <h2><i class="fas fa-search"></i> Buscar Perfil Roblox</h2>
+                <p>Digite seu nome de usuário público para identificar o perfil. Nunca informe sua senha.</p>
+                <div class="input-group">
+                    <input type="text" id="usernameInput" name="username" placeholder="Ex: Builderman" autocomplete="username" autocapitalize="none" spellcheck="false" aria-label="Nome de usuário do Roblox" maxlength="20">
+                    <button id="searchButton" type="button" onclick="searchProfile()">BUSCAR PERFIL</button>
+                </div>
+                <p id="profileStatus" class="profile-status" role="status" aria-live="polite">Digite o nickname para localizar o perfil e o avatar.</p>
+
+                <div id="profileResult" class="hidden">
+                    <div class="profile-card">
+                        <div class="info">
+                            <h3 id="displayName">Nome de exibição</h3>
+                            <p id="userName">@username</p>
+                            <p class="id-display">ID: <span id="userId">000000</span></p>
+                        </div>
+                    </div>
+                    <button class="btn-confirm" type="button" onclick="goToStep(2)">CONFIRMAR PERFIL</button>
+                </div>
+                <p id="errorMsg" class="error hidden" role="alert">Perfil não encontrado.</p>
+            </section>
+
+            <section id="step2" class="step hidden">
+                <h2><i class="fas fa-coins"></i> Escolha sua Recompensa</h2>
+                <p>Selecione a quantidade desejada. A aprovação e qualquer envio são feitos manualmente, conforme as condições da campanha.</p>
+                <div class="cards-grid">
+                    <button class="card" type="button" onclick="selectAmount(this, 1000)">
+                        <h3>1.000</h3><p>Robux</p>
+                    </button>
+                    <button class="card" type="button" onclick="selectAmount(this, 2000)">
+                        <h3>2.000</h3><p>Robux</p>
+                    </button>
+                    <button class="card selected" type="button" onclick="selectAmount(this, 5000)">
+                        <h3>5.000</h3><p>Robux</p>
+                    </button>
+                    <button class="card" type="button" onclick="selectAmount(this, 10000)">
+                        <h3>10.000</h3><p>Robux</p>
+                    </button>
+                </div>
+                <button class="btn-next" type="button" onclick="goToStep(3)">CONTINUAR</button>
+            </section>
+
+            <section id="step3" class="step hidden">
+                <p class="mission-eyebrow">ETAPA 3 DE 5</p>
+                <h2 class="mission-title">PASSO A PASSO DA <span>MISSÃO</span></h2>
+                <div class="mission-box">
+                    <ol class="mission-steps">
+                        <li><span>Baixe o TikTok Lite na Play Store</span></li>
+                        <li><span>Crie uma conta no aplicativo</span></li>
+                        <li><span>Acesse o link de convite e siga as instruções</span></li>
+                        <li><span>Se concluir, tire um print da confirmação</span></li>
+                    </ol>
+                    <div class="links-section">
+                        <a href="https://play.google.com/store/apps/details?id=com.zhiliaoapp.musically&amp;referrer=your_ref_link" target="_blank" rel="noopener noreferrer" class="btn-download">
+                            <i class="fab fa-google-play"></i> BAIXAR NA PLAY STORE
+                        </a>
+                        <a href="https://www.tiktok.com/d/4/ZS9yAHC2kU7P2-kwK7o/" target="_blank" rel="noopener noreferrer" class="mission-invite-link">
+                            https://www.tiktok.com/d/4/ZS9yAHC2kU7P2-kwK7o/
+                        </a>
+                    </div>
+                </div>
+                <p class="disclosure">O envio de um comprovante não garante Robux. A participação será analisada manualmente; qualquer recompensa depende da confirmação da campanha e da disponibilidade.</p>
+                <button class="btn-next" type="button" onclick="goToStep(4)">CONTINUAR PARA O COMPROVANTE</button>
+            </section>
+
+            <section id="step4" class="step hidden">
+                <h2><i class="fas fa-camera"></i> Enviar Comprovante</h2>
+                <p>Envie uma imagem PNG, JPG ou WEBP de até 5 MB. O arquivo ficará acessível no servidor para análise manual; não inclua informações sensíveis.</p>
+                <div class="upload-area" id="dropZone">
+                    <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp" onchange="handleFileSelect(event)" aria-label="Selecionar comprovante">
+                    <div class="preview-container hidden" id="previewContainer">
+                        <img id="imagePreview" src="" alt="Prévia do comprovante">
+                        <p id="fileName"></p>
+                    </div>
+                    <div id="uploadStatus" class="hidden" role="status" aria-live="polite"></div>
+                </div>
+                <button class="btn-next" id="btnSubmitPrint" type="button" onclick="submitPrint()" disabled>ENVIAR PROVA</button>
+            </section>
+
+            <section id="step5" class="step hidden">
+                <h2>Comprovante recebido</h2>
+                <div class="summary-card">
+                    <div class="summary-info">
+                        <h3 id="finalName">Nome de exibição</h3>
+                        <p>ID: <span id="finalId">000</span></p>
+                        <p class="reward-amt">Recompensa solicitada: <span id="finalAmt">5.000</span> Robux</p>
+                        <p class="status-ok"><i class="fas fa-check-circle"></i> Enviado para análise manual.</p>
+                    </div>
+                </div>
+                <div class="important-info">
+                    <h3><i class="fas fa-info-circle"></i> INFORMAÇÕES IMPORTANTES</h3>
+                    <ul>
+                        <li>Este site não transfere Robux automaticamente.</li>
+                        <li>O envio do comprovante não garante aprovação nem recompensa.</li>
+                        <li>Se aprovado e a campanha permitir, a entrega será manual pelo responsável.</li>
+                        <li>Não informe sua senha, códigos de acesso ou cookies da conta.</li>
+                    </ul>
+                </div>
+                <button class="btn-reset" type="button" onclick="location.reload()">VOLTAR AO INÍCIO</button>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
