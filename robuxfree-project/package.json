@@ -1,11 +1,11 @@
+
 {
   "name": "roblox-gold",
   "version": "1.0.0",
   "private": true,
-  "description": "Página de campanha com análise manual de comprovantes",
-  "main": "server.js",
+  "main": "servidor.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node servidor.js"
   },
   "engines": {
     "node": ">=18"
