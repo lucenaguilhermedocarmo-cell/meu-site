@@ -5,7 +5,7 @@
   "private": true,
   "main": "servidor.js",
   "scripts": {
-    "start": "node servidor.js"
+    "start": "node server.js"
   },
   "engines": {
     "node": ">=18"
