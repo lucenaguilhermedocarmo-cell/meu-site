@@ -2,14 +2,10 @@ let currentStep = 1;
 const userData = {
     username: '',
     displayName: '',
-    userId: '',
     amount: 5000
 };
 let selectedFile = null;
 let previewUrl = '';
-let profileSearchTimer = null;
-let profileSearchId = 0;
-const profileCache = new Map();
 
 function updateProgress(step) {
     document.getElementById('progressBar').style.width = `${(step / 5) * 100}%`;
@@ -34,134 +30,43 @@ function goToStep(step) {
     updateProgress(step);
 }
 
-async function searchProfile() {
+function searchProfile() {
     const input = document.getElementById('usernameInput').value.trim();
     const errorMsg = document.getElementById('errorMsg');
     const resultDiv = document.getElementById('profileResult');
     const profileStatus = document.getElementById('profileStatus');
-    const searchButton = document.getElementById('searchButton');
 
     if (!/^[a-zA-Z0-9_]{3,20}$/.test(input)) {
         profileStatus.textContent = 'O nickname deve ter de 3 a 20 letras, números ou _ (sublinhado).';
         profileStatus.classList.remove('hidden');
         resultDiv.classList.add('hidden');
+        userData.username = '';
+        userData.displayName = '';
         return;
     }
 
-    clearTimeout(profileSearchTimer);
-    const requestId = ++profileSearchId;
     errorMsg.classList.add('hidden');
     userData.username = input;
     userData.displayName = input;
-    userData.userId = '';
     document.getElementById('displayName').textContent = input;
     document.getElementById('userName').textContent = `@${input}`;
-    document.getElementById('userId').textContent = 'Não verificado';
     resultDiv.classList.remove('hidden');
-    searchButton.disabled = true;
-    searchButton.textContent = 'BUSCANDO...';
-    profileStatus.textContent = 'Nickname exibido. Tentando confirmar com o Roblox...';
-    profileStatus.classList.remove('hidden');
-
-    try {
-        const cacheKey = input.toLowerCase();
-        let profile = profileCache.get(cacheKey);
-        if (!profile) {
-            profile = await searchRobloxDirectly(input);
-            profileCache.set(cacheKey, profile);
-        }
-        if (requestId !== profileSearchId) return;
-
-        userData.username = profile.username;
-        userData.displayName = profile.displayName;
-        userData.userId = profile.userId;
-        document.getElementById('displayName').textContent = profile.displayName;
-        document.getElementById('userName').textContent = `@${profile.username}`;
-        document.getElementById('userId').textContent = profile.userId;
-        resultDiv.classList.remove('hidden');
-        profileStatus.textContent = 'Perfil encontrado. Confira o nickname antes de confirmar.';
-    } catch (error) {
-        if (error.name === 'AbortError' || requestId !== profileSearchId) return;
-        console.error('Erro ao buscar perfil:', error);
-        userData.userId = '';
-        document.getElementById('displayName').textContent = input;
-        document.getElementById('userName').textContent = `@${input}`;
-        document.getElementById('userId').textContent = 'Não verificado';
-        resultDiv.classList.remove('hidden');
-        profileStatus.textContent = `Não consegui confirmar "${input}" com o Roblox. Você pode continuar com o nickname digitado, mas ele não foi verificado.`;
-    } finally {
-        if (requestId === profileSearchId) {
-            searchButton.disabled = false;
-            searchButton.textContent = 'BUSCAR PERFIL';
-        }
-    }
-}
-
-async function searchRobloxDirectly(username) {
-    let user;
-    try {
-        const response = await fetch('https://users.roblox.com/v1/usernames/users', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ usernames: [username], excludeBannedUsers: true })
-        });
-        if (response.status === 429) {
-            throw new Error('O Roblox está limitando as buscas no momento. Aguarde um minuto e tente novamente.');
-        }
-        if (!response.ok) {
-            throw new Error('O Roblox não conseguiu consultar esse nickname. Tente novamente mais tarde.');
-        }
-        const searchData = await response.json();
-        user = searchData.data?.find((item) =>
-            item.requestedUsername.toLowerCase() === username.toLowerCase()
-        );
-    } catch (error) {
-        if (!(error instanceof TypeError)) throw error;
-
-        const searchUrl = new URL('https://users.roblox.com/v1/users/search');
-        searchUrl.search = new URLSearchParams({ keyword: username, limit: '10' });
-        const response = await fetch(searchUrl, { headers: { Accept: 'application/json' } });
-        if (response.status === 429) {
-            throw new Error('O Roblox está limitando as buscas no momento. Aguarde um minuto e tente novamente.');
-        }
-        if (!response.ok) {
-            throw new Error('O Roblox não conseguiu consultar esse nickname. Tente novamente mais tarde.');
-        }
-        const searchData = await response.json();
-        user = searchData.data?.find((item) => item.name.toLowerCase() === username.toLowerCase());
-    }
-
-    if (!user) {
-        throw new Error('Não encontrei um perfil com esse nome exato. Confira o nickname.');
-    }
-
-    return {
-        username: user.name,
-        displayName: user.displayName,
-        userId: String(user.id)
-    };
+    profileStatus.textContent = 'Nickname selecionado. Confira antes de continuar.';
 }
 
 function handleUsernameInput() {
-    clearTimeout(profileSearchTimer);
-    profileSearchId += 1;
-
     userData.username = '';
     userData.displayName = '';
-    userData.userId = '';
     document.getElementById('profileResult').classList.add('hidden');
     document.getElementById('errorMsg').classList.add('hidden');
     const input = document.getElementById('usernameInput').value.trim();
     const profileStatus = document.getElementById('profileStatus');
     const searchButton = document.getElementById('searchButton');
     searchButton.disabled = false;
-    searchButton.textContent = 'BUSCAR PERFIL';
+    searchButton.textContent = 'CONTINUAR COM NICK';
 
     if (input.length < 3) {
-        profileStatus.textContent = 'Digite pelo menos 3 caracteres para buscar o perfil.';
+        profileStatus.textContent = 'Digite pelo menos 3 caracteres para continuar.';
         return;
     }
     if (!/^[a-zA-Z0-9_]{3,20}$/.test(input)) {
@@ -169,16 +74,24 @@ function handleUsernameInput() {
         return;
     }
 
-    userData.username = input;
-    userData.displayName = input;
-    document.getElementById('displayName').textContent = input;
-    document.getElementById('userName').textContent = `@${input}`;
-    document.getElementById('userId').textContent = 'Não verificado';
-    document.getElementById('profileResult').classList.remove('hidden');
-    profileStatus.textContent = 'Nickname exibido. Tentando confirmar com o Roblox...';
-    profileSearchTimer = setTimeout(() => {
-        searchProfile();
-    }, 1400);
+    profileStatus.textContent = 'Clique em CONTINUAR COM NICK para prosseguir.';
+}
+
+function changeProfile() {
+    userData.username = '';
+    userData.displayName = '';
+    document.getElementById('usernameInput').value = '';
+    document.getElementById('profileResult').classList.add('hidden');
+    document.getElementById('errorMsg').classList.add('hidden');
+    document.getElementById('profileStatus').textContent = 'Digite o nickname para continuar.';
+    document.getElementById('usernameInput').focus();
+}
+
+function continueFromTutorial() {
+    const searchSection = document.getElementById('profileSearchSection');
+    const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+    searchSection.scrollIntoView({ behavior, block: 'center' });
+    document.getElementById('usernameInput').focus({ preventScroll: true });
 }
 
 document.getElementById('usernameInput').addEventListener('input', handleUsernameInput);
@@ -274,8 +187,159 @@ async function submitPrint() {
 
 function prepareSummary() {
     document.getElementById('finalName').textContent = userData.displayName;
-    document.getElementById('finalId').textContent = userData.userId || 'Não verificado';
     document.getElementById('finalAmt').textContent = userData.amount.toLocaleString('pt-BR');
 }
 
 updateProgress(currentStep);
+
+const tutorialVideo = document.getElementById('tutorialVideo');
+const tutorialStatus = document.getElementById('tutorialStatus');
+tutorialVideo.addEventListener('loadedmetadata', () => {
+    tutorialStatus.classList.add('hidden');
+});
+tutorialVideo.addEventListener('error', () => {
+    tutorialStatus.textContent = 'Não foi possível carregar o vídeo. Confirme se public\\media\\tutorial.mp4 está disponível.';
+    tutorialStatus.classList.remove('hidden');
+});
+
+function initializeGoldSnow() {
+    const canvas = document.getElementById('snowCanvas');
+    const context = canvas.getContext('2d');
+    if (!context) return;
+
+    const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let width = 0;
+    let height = 0;
+    let flakes = [];
+    let clickParticles = [];
+    let animationFrame = 0;
+
+    function resizeCanvas() {
+        const ratio = Math.min(window.devicePixelRatio || 1, 1.5);
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = Math.round(width * ratio);
+        canvas.height = Math.round(height * ratio);
+        context.setTransform(ratio, 0, 0, ratio, 0, 0);
+        const count = width < 600 ? 24 : 42;
+        flakes = Array.from({ length: count }, () => ({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            size: 1.2 + Math.random() * 3.2,
+            speed: 0.25 + Math.random() * 0.85,
+            drift: (Math.random() - 0.5) * 0.55,
+            angle: Math.random() * Math.PI * 2,
+            spin: (Math.random() - 0.5) * 0.012,
+            flake: Math.random() > 0.42
+        }));
+        drawFrame(false);
+    }
+
+    function drawFlake(flake, advance) {
+        if (advance) {
+            flake.y += flake.speed;
+            flake.x += flake.drift + Math.sin(flake.angle) * 0.25;
+            flake.angle += flake.spin;
+            if (flake.y > height + 8) {
+                flake.y = -8;
+                flake.x = Math.random() * width;
+            }
+            if (flake.x < -8) flake.x = width + 8;
+            if (flake.x > width + 8) flake.x = -8;
+        }
+
+        context.save();
+        context.translate(flake.x, flake.y);
+        context.rotate(flake.angle);
+        context.globalAlpha = 0.38 + Math.abs(Math.sin(flake.angle * 1.7)) * 0.48;
+        context.strokeStyle = '#ffd75a';
+        context.fillStyle = '#ffe78a';
+        context.shadowColor = '#ffc400';
+        context.shadowBlur = flake.size * 3;
+        if (flake.flake) {
+            context.lineWidth = Math.max(0.55, flake.size * 0.22);
+            context.beginPath();
+            for (let arm = 0; arm < 3; arm += 1) {
+                const angle = arm * Math.PI / 3;
+                context.moveTo(-flake.size, 0);
+                context.lineTo(flake.size, 0);
+                context.moveTo(-flake.size * 0.45, 0);
+                context.lineTo(-flake.size * 0.7, -flake.size * 0.3);
+                context.moveTo(-flake.size * 0.45, 0);
+                context.lineTo(-flake.size * 0.7, flake.size * 0.3);
+                context.rotate(angle);
+            }
+            context.stroke();
+        } else {
+            context.beginPath();
+            context.arc(0, 0, flake.size * 0.55, 0, Math.PI * 2);
+            context.fill();
+        }
+        context.restore();
+    }
+
+    function drawFrame(advance) {
+        context.clearRect(0, 0, width, height);
+        flakes.forEach((flake) => drawFlake(flake, advance));
+        if (advance) {
+            clickParticles = clickParticles.filter((particle) => particle.life > 0);
+            clickParticles.forEach((particle) => {
+                particle.x += particle.vx;
+                particle.y += particle.vy;
+                particle.life -= 1;
+                context.globalAlpha = particle.life / particle.maxLife;
+                context.fillStyle = '#ffd700';
+                context.shadowColor = '#ffd700';
+                context.shadowBlur = 8;
+                context.beginPath();
+                context.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                context.fill();
+            });
+            context.globalAlpha = 1;
+        }
+    }
+
+    function animate() {
+        if (motionPreference.matches || document.hidden) return;
+        drawFrame(true);
+        animationFrame = window.requestAnimationFrame(animate);
+    }
+
+    function startAnimation() {
+        window.cancelAnimationFrame(animationFrame);
+        if (motionPreference.matches) {
+            drawFrame(false);
+        } else if (!document.hidden) {
+            animate();
+        }
+    }
+
+    window.addEventListener('resize', resizeCanvas, { passive: true });
+    document.addEventListener('visibilitychange', startAnimation);
+    if (motionPreference.addEventListener) {
+        motionPreference.addEventListener('change', startAnimation);
+    } else {
+        motionPreference.addListener(startAnimation);
+    }
+    document.addEventListener('click', (event) => {
+        if (motionPreference.matches || !event.target.closest('button:not(:disabled)')) return;
+        for (let index = 0; index < 9; index += 1) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 0.6 + Math.random() * 2;
+            clickParticles.push({
+                x: event.clientX,
+                y: event.clientY,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                size: 1 + Math.random() * 2,
+                life: 24,
+                maxLife: 24
+            });
+        }
+    });
+
+    resizeCanvas();
+    startAnimation();
+}
+
+initializeGoldSnow();

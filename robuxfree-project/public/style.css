@@ -183,12 +183,6 @@ button:disabled {
     font-size: 0.9rem;
 }
 
-.id-display {
-    margin-top: 5px;
-    color: var(--gold) !important;
-    font-size: 0.8rem !important;
-}
-
 .cards-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -433,5 +427,387 @@ button:disabled {
 
     .input-group button {
         margin-top: 0;
+    }
+}
+
+:root {
+    --bg-color: #050505;
+    --card-bg: rgba(15, 15, 15, 0.88);
+    --gold: #ffd700;
+    --gold-dim: #b89b00;
+    --text-main: #fff;
+    --text-muted: #b8b8b8;
+    --border: #4a3e13;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    position: relative;
+    min-width: 320px;
+    align-items: flex-start;
+    overflow-x: hidden;
+    padding: 32px 18px;
+    background:
+        radial-gradient(ellipse at 50% 0%, rgb(91 69 0 / 16%), transparent 48%),
+        #050505;
+}
+
+#snowCanvas {
+    position: fixed;
+    z-index: 0;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 760px);
+    max-width: 760px;
+    padding: clamp(20px, 5vw, 38px);
+    background: linear-gradient(145deg, rgb(20 20 20 / 94%), rgb(8 8 8 / 92%));
+    border: 1px solid rgb(255 215 0 / 60%);
+    border-radius: 22px;
+    box-shadow: 0 18px 70px rgb(0 0 0 / 55%), 0 0 32px rgb(255 215 0 / 9%);
+    backdrop-filter: blur(14px);
+}
+
+header h1 {
+    margin-bottom: 15px;
+    font-size: clamp(1.7rem, 5vw, 2.35rem);
+    letter-spacing: 0.12em;
+}
+
+.gold-text,
+h2,
+.mission-title span {
+    color: transparent;
+    background: linear-gradient(110deg, #a98100 8%, #fff0a1 35%, #ffd700 53%, #a98100 78%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    background-size: 220% auto;
+    animation: metallicShimmer 7s linear infinite;
+}
+
+.progress-container {
+    height: 7px;
+    background: #252525;
+    box-shadow: inset 0 0 8px #000;
+}
+
+.progress-bar {
+    background: linear-gradient(90deg, #987400, #fff0a1 48%, #ffd700);
+    box-shadow: 0 0 12px rgb(255 215 0 / 65%);
+}
+
+.independent-disclaimer {
+    margin: -5px 0 25px;
+    color: #aaa;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.step {
+    animation: fadeIn 0.45s ease both;
+}
+
+h2 {
+    margin-bottom: 12px;
+    font-size: clamp(1.25rem, 4vw, 1.55rem);
+    text-align: left;
+}
+
+.step > p:not(.mission-eyebrow):not(.mission-title):not(.disclosure):not(.error):not(.profile-status) {
+    color: #c8c8c8;
+}
+
+.tutorial-panel,
+.mission-box,
+.important-info,
+.profile-card,
+.summary-card,
+.upload-area {
+    background: linear-gradient(145deg, rgb(22 22 22 / 94%), rgb(12 12 12 / 94%));
+    border: 1px solid rgb(255 215 0 / 22%);
+    box-shadow: 0 12px 30px rgb(0 0 0 / 28%), inset 0 1px rgb(255 255 255 / 3%);
+    backdrop-filter: blur(10px);
+}
+
+.tutorial-panel {
+    margin-bottom: 30px;
+    padding: clamp(14px, 3.5vw, 22px);
+    border-radius: 17px;
+}
+
+.tutorial-eyebrow {
+    margin-bottom: 7px;
+    color: var(--gold);
+    font-size: 0.83rem;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+}
+
+.tutorial-description {
+    margin-bottom: 14px;
+    color: #c7c7c7;
+    font-size: 0.92rem;
+}
+
+.tutorial-player {
+    overflow: hidden;
+    padding: 8px;
+    background: #000;
+    border: 1px solid rgb(255 215 0 / 63%);
+    border-radius: 13px;
+    box-shadow: 0 0 20px rgb(255 215 0 / 10%);
+}
+
+.tutorial-player video {
+    display: block;
+    width: 100%;
+    max-height: min(55vw, 420px);
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: 8px;
+    object-fit: contain;
+}
+
+.tutorial-status {
+    padding: 9px 5px 2px;
+    color: #d7c77d;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.tutorial-status code {
+    color: #fff0a1;
+    overflow-wrap: anywhere;
+}
+
+.tutorial-continue {
+    margin-top: 12px;
+}
+
+#profileSearchSection {
+    scroll-margin-top: 24px;
+}
+
+.input-group {
+    margin: 18px 0 12px;
+}
+
+input[type="text"] {
+    min-height: 48px;
+    color: #fff;
+    background: rgb(5 5 5 / 85%);
+    border-color: #51451a;
+    border-radius: 10px;
+}
+
+input[type="text"]:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgb(255 215 0 / 12%);
+}
+
+button,
+.btn-link,
+.btn-download {
+    min-height: 46px;
+    border-radius: 10px;
+    box-shadow: 0 5px 18px rgb(255 193 0 / 12%);
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease;
+    animation: goldPulse 3.6s ease-in-out infinite;
+}
+
+button:hover:not(:disabled),
+.btn-link:hover,
+.btn-download:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 22px rgb(255 215 0 / 35%);
+}
+
+button:active:not(:disabled) {
+    transform: translateY(0) scale(0.99);
+}
+
+.profile-status {
+    min-height: 24px;
+    color: #c8c8c8;
+}
+
+.profile-card,
+.summary-card {
+    gap: 16px;
+    border-color: rgb(255 215 0 / 58%);
+    border-radius: 14px;
+    box-shadow: 0 0 24px rgb(255 215 0 / 9%);
+}
+
+.info h3,
+.summary-info h3 {
+    color: #fff;
+}
+
+.profile-confirm-question {
+    margin: 12px 0 2px;
+    color: #fff0a1;
+    font-size: 1.05rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.profile-selection-note {
+    margin-bottom: 8px;
+    color: #aaa;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.btn-change-profile,
+.btn-reset {
+    color: var(--gold);
+    background: linear-gradient(145deg, #111, #080808);
+    border: 1px solid rgb(255 215 0 / 70%);
+    animation: none;
+}
+
+.cards-grid .card {
+    color: #fff;
+    background: linear-gradient(145deg, #181818, #0d0d0d);
+    border-color: #3c3418;
+}
+
+.cards-grid .card.selected,
+.cards-grid .card:hover:not(:disabled) {
+    background: linear-gradient(145deg, #302600, #171300);
+    border-color: var(--gold);
+    box-shadow: 0 0 20px rgb(255 215 0 / 17%);
+}
+
+.mission-eyebrow {
+    color: #e6c349;
+}
+
+.mission-title {
+    color: #f7eee8;
+}
+
+.mission-box {
+    border-radius: 16px;
+}
+
+.mission-steps li {
+    color: #f3f0e5;
+    background: #14130f;
+    border-color: #403816;
+    border-radius: 12px;
+}
+
+.mission-steps li::before {
+    color: #171100;
+    background: linear-gradient(135deg, #fff0a1, #d6a900);
+}
+
+.links-section .btn-download {
+    color: #fff0a1;
+    background: #17150c;
+    border-color: #51451a;
+}
+
+.mission-invite-link {
+    color: #ffe478;
+    background: #17150c;
+    border-color: #51451a;
+    border-radius: 12px;
+}
+
+.mission-invite-link:hover {
+    background: #24200f;
+}
+
+.disclosure {
+    color: #e2d9bd;
+    background: #17140a;
+    border-left-color: var(--gold);
+}
+
+.upload-area {
+    border-color: #594b19;
+    border-style: dashed;
+    border-radius: 14px;
+}
+
+.important-info {
+    color: #d5d5d5;
+    border-radius: 14px;
+}
+
+.status-ok {
+    color: #a7d99a;
+}
+
+.error {
+    color: #ff7777;
+}
+
+@keyframes metallicShimmer {
+    to { background-position: 220% center; }
+}
+
+@keyframes goldPulse {
+    0%, 100% { box-shadow: 0 5px 18px rgb(255 193 0 / 10%); }
+    50% { box-shadow: 0 5px 22px rgb(255 193 0 / 24%); }
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 12px 10px;
+    }
+
+    .container {
+        padding: 19px 15px;
+        border-radius: 17px;
+    }
+
+    .input-group {
+        flex-direction: column;
+    }
+
+    .input-group input[type="text"],
+    .input-group button {
+        width: 100%;
+    }
+
+    .input-group button {
+        margin-top: 0;
+    }
+
+    .tutorial-panel {
+        padding: 13px;
+    }
+
+}
+
+@media (max-width: 400px) {
+    .cards-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
     }
 }

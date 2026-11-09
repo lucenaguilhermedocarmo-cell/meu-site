@@ -37,8 +37,9 @@ app.get('/api/roblox/profile', async (req, res, next) => {
         return res.json(cached.profile);
     }
 
+    let profileRequest;
     try {
-        let profileRequest = profileRequests.get(cacheKey);
+        profileRequest = profileRequests.get(cacheKey);
         if (!profileRequest) {
             profileRequest = (async () => {
                 const searchResponse = await fetch('https://users.roblox.com/v1/usernames/users', {
@@ -65,33 +66,26 @@ app.get('/api/roblox/profile', async (req, res, next) => {
                     throw error;
                 }
 
-                const avatarUrl = new URL('https://thumbnails.roblox.com/v1/users/avatar-headshot');
-                avatarUrl.search = new URLSearchParams({
-                    userIds: String(user.id),
-                    size: '150x150',
-                    format: 'Png',
-                    isCircular: 'false'
+                const userResponse = await fetch(`https://users.roblox.com/v1/users/${user.id}`, {
+                    headers: { Accept: 'application/json' }
                 });
-                const avatarResponse = await fetch(avatarUrl, { headers: { Accept: 'application/json' } });
-                if (!avatarResponse.ok) {
-                    const error = new Error('Não foi possível carregar o avatar agora.');
-                    error.status = avatarResponse.status === 429 ? 429 : 502;
+                if (!userResponse.ok) {
+                    const error = new Error('Não foi possível carregar os dados desse perfil agora.');
+                    error.status = userResponse.status === 429 ? 429 : 502;
                     throw error;
                 }
 
-                const avatarData = await avatarResponse.json();
-                const imageUrl = avatarData.data?.[0]?.imageUrl;
-                if (!imageUrl) {
-                    const error = new Error('O Roblox ainda não disponibilizou o avatar desse perfil.');
-                    error.status = 404;
+                const userDetails = await userResponse.json();
+                if (String(userDetails.id) !== String(user.id) || !userDetails.name || !userDetails.displayName) {
+                    const error = new Error('O Roblox retornou dados incompletos para esse perfil.');
+                    error.status = 502;
                     throw error;
                 }
 
                 return {
-                    username: user.name,
-                    displayName: user.displayName,
-                    userId: String(user.id),
-                    avatarUrl: imageUrl
+                    username: userDetails.name,
+                    displayName: userDetails.displayName,
+                    userId: String(userDetails.id)
                 };
             })();
             profileRequests.set(cacheKey, profileRequest);
@@ -106,7 +100,9 @@ app.get('/api/roblox/profile', async (req, res, next) => {
         }
         return next(error);
     } finally {
-        profileRequests.delete(cacheKey);
+        if (profileRequests.get(cacheKey) === profileRequest) {
+            profileRequests.delete(cacheKey);
+        }
     }
 });
 
@@ -195,7 +191,7 @@ app.use((error, req, res, next) => {
     }
 
     console.error('Erro no servidor:', error);
-    return res.status(500).json({ error: 'Erro interno ao receber a imagem.' });
+    return res.status(500).json({ error: 'Erro interno no servidor.' });
 });
 
 app.listen(PORT, () => {

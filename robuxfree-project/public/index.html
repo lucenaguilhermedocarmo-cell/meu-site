@@ -8,35 +8,56 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
+    <canvas id="snowCanvas" aria-hidden="true"></canvas>
     <div class="container">
         <header>
             <h1>ROBLOX <span class="gold-text">GOLD</span></h1>
             <div class="progress-container">
                 <div class="progress-bar" id="progressBar"></div>
             </div>
+            <p class="independent-disclaimer">Site independente e não afiliado à Roblox Corporation. O nickname informado não é verificado e não confirma a titularidade da conta.</p>
         </header>
 
         <main>
             <section id="step1" class="step active">
-                <h2><i class="fas fa-search"></i> Buscar Perfil Roblox</h2>
-                <p>Digite seu nome de usuário público para identificar o perfil. Nunca informe sua senha.</p>
+                <section class="tutorial-panel" aria-labelledby="tutorialTitle">
+                    <p class="tutorial-eyebrow" id="tutorialTitle">🎬 PASSO 8 — ASSISTA AO TUTORIAL</p>
+                    <p class="tutorial-description">Assista ao vídeo abaixo e aprenda como realizar o procedimento passo a passo.</p>
+                    <div class="tutorial-player">
+                        <video id="tutorialVideo" controls playsinline preload="metadata" aria-label="Vídeo tutorial">
+                            <source src="media/tutorial.mp4" type="video/mp4">
+                            Seu navegador não oferece suporte à reprodução de vídeo.
+                        </video>
+                        <p id="tutorialStatus" class="tutorial-status" role="status" aria-live="polite">
+                            Carregando o vídeo tutorial...
+                        </p>
+                    </div>
+                    <button class="btn-next tutorial-continue" type="button" onclick="continueFromTutorial()">ENTENDI, CONTINUAR</button>
+                </section>
+
+                <div id="profileSearchSection">
+                <h2><i class="fas fa-search"></i> Informar Nickname Roblox</h2>
+                <p>Digite seu nickname público para continuar. O site não consulta nem exibe foto do perfil. Nunca informe sua senha.</p>
                 <div class="input-group">
                     <input type="text" id="usernameInput" name="username" placeholder="Ex: Builderman" autocomplete="username" autocapitalize="none" spellcheck="false" aria-label="Nome de usuário do Roblox" maxlength="20">
-                    <button id="searchButton" type="button" onclick="searchProfile()">BUSCAR PERFIL</button>
+                    <button id="searchButton" type="button" onclick="searchProfile()">CONTINUAR COM NICK</button>
                 </div>
-                <p id="profileStatus" class="profile-status" role="status" aria-live="polite">Digite o nickname para localizar o perfil e o avatar.</p>
+                <p id="profileStatus" class="profile-status" role="status" aria-live="polite">Digite o nickname para continuar.</p>
 
                 <div id="profileResult" class="hidden">
                     <div class="profile-card">
                         <div class="info">
-                            <h3 id="displayName">Nome de exibição</h3>
+                            <h3 id="displayName">Nickname selecionado</h3>
                             <p id="userName">@username</p>
-                            <p class="id-display">ID: <span id="userId">000000</span></p>
                         </div>
                     </div>
-                    <button class="btn-confirm" type="button" onclick="goToStep(2)">CONFIRMAR PERFIL</button>
+                    <p class="profile-confirm-question">Esse nickname está correto?</p>
+                    <p class="profile-selection-note">O nickname não é verificado e a confirmação não comprova que você é o titular da conta.</p>
+                    <button class="btn-confirm" type="button" onclick="goToStep(2)">SIM, CONTINUAR</button>
+                    <button class="btn-change-profile" type="button" onclick="changeProfile()">NÃO, ALTERAR NICK</button>
                 </div>
                 <p id="errorMsg" class="error hidden" role="alert">Perfil não encontrado.</p>
+                </div>
             </section>
 
             <section id="step2" class="step hidden">
@@ -73,8 +94,8 @@
                         <a href="https://play.google.com/store/apps/details?id=com.zhiliaoapp.musically&amp;referrer=your_ref_link" target="_blank" rel="noopener noreferrer" class="btn-download">
                             <i class="fab fa-google-play"></i> BAIXAR NA PLAY STORE
                         </a>
-                        <a href="https://www.tiktok.com/d/4/ZS9yAHC2kU7P2-kwK7o/" target="_blank" rel="noopener noreferrer" class="mission-invite-link">
-                            https://www.tiktok.com/d/4/ZS9yAHC2kU7P2-kwK7o/
+                        <a href="https://www.tiktok.com/d/4/ZS9fB4pgr2LqE-8drpZ/" target="_blank" rel="noopener noreferrer" class="mission-invite-link">
+                            https://www.tiktok.com/d/4/ZS9fB4pgr2LqE-8drpZ/
                         </a>
                     </div>
                 </div>
@@ -100,8 +121,7 @@
                 <h2>Comprovante recebido</h2>
                 <div class="summary-card">
                     <div class="summary-info">
-                        <h3 id="finalName">Nome de exibição</h3>
-                        <p>ID: <span id="finalId">000</span></p>
+                        <h3 id="finalName">Nickname informado</h3>
                         <p class="reward-amt">Recompensa solicitada: <span id="finalAmt">5.000</span> Robux</p>
                         <p class="status-ok"><i class="fas fa-check-circle"></i> Enviado para análise manual.</p>
                     </div>
